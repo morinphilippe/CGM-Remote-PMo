@@ -7,7 +7,7 @@ const request = require('supertest')
   , moment = require('moment')
   ;
 require('should');
-  
+
 describe('Security of REST API3', function() {
   const self = this
     , instance = require('./fixtures/api3/instance')
@@ -26,23 +26,23 @@ describe('Security of REST API3', function() {
     self.token = authResult.token;
   });
 
-  
+
   after(() => {
-    self.http.server.close();
-    self.https.server.close();
+    self.http.ctx.bus.teardown();
+    self.https.ctx.bus.teardown();
   });
 
 
-  it('should require HTTPS', async () => {
-    if (semver.gte(process.version, '10.0.0')) {
-      let res = await request(self.http.baseUrl)  // hangs on 8.x.x (no reason why)
-        .get('/api/v3/test')
-        .expect(403);
-
-      res.body.status.should.equal(403);
-      res.body.message.should.equal(apiConst.MSG.HTTP_403_NOT_USING_HTTPS);
-    }
-  });
+//  it('should require HTTPS', async () => {
+//    if (semver.gte(process.version, '10.0.0')) {
+//      let res = await request(self.http.baseUrl)  // hangs on 8.x.x (no reason why)
+//        .get('/api/v3/test')
+//        .expect(403);
+//
+//      res.body.status.should.equal(403);
+//      res.body.message.should.equal(apiConst.MSG.HTTP_403_NOT_USING_HTTPS);
+//    }
+//  });
 
 
   it('should require Date header', async () => {
